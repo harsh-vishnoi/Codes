@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define ll long long 
+
+void update(ll root, ll l, ll r, ll index, ll value, ll *arr, ll *tree){
+    if(l > r)
+        return;
+    if(l == index && l == r){
+        arr[l] = value;
+        tree[root] = arr[l];
+        return;
+    }
+    
+    ll mid = l + (r - l)/2;
+    if(index <= mid){
+        update(2*root + 1, l, mid, index, value, arr, tree);
+    }else{
+        update(2*root + 2, mid + 1, r, index, value, arr, tree);
+    }
+    tree[root] = max(tree[2*root + 1], tree[2*root + 2]);
+}
+
+void solve(ll root, ll l, ll r, ll *arr, ll *tree){
+    if(l == r){
+        tree[root] = arr[l];
+        return;
+    }
+
+    ll mid = l + (r - l)/2;
+    solve(2*root + 1, l, mid, arr, tree);
+    solve(2*root + 2, mid + 1, r, arr, tree);
+    tree[root] = max(tree[2*root + 1], tree[2*root + 2]);
+}
+
+int main(){
+
+    ll n;
+    cin >> n;
+
+    ll arr[n];
+    for(ll i=0; i<n; i++)
+        cin >> arr[i];
+
+    ll tree[4*n];    
+    solve(0, 0, n-1, arr, tree);
+    cout << tree[0] << endl;
+
+    update(0, 0, n-1, 0, 10, arr, tree);
+    solve(0, 0, n-1, arr, tree);
+    cout << tree[0] << endl;
+
+    update(0, 0, n-1, 1, 2, arr, tree);
+    solve(0, 0, n-1, arr, tree);
+    cout << tree[0] << endl;
+
+    update(0, 0, n-1, 0, 0, arr, tree);
+    solve(0, 0, n-1, arr, tree);
+    cout << tree[0] << endl;
+
+    return 0;
+}
